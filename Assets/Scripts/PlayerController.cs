@@ -57,6 +57,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public int GetPoints()
+    {
+        return points;
+    }
+
     public void AddTail(GameObject t)
     {
         // if (t == null) {
