@@ -9,7 +9,7 @@ public class PowerUpSpawner : MonoBehaviour
     // Time To Double in seconds
     public int ttu = 1;
     private float maxX = 8;
-    private float maxY = 0;
+    // private float maxY = 0;
     private float maxZ = 8;
     private float timePassed = 0.0f;
     // Maximum number of powerups we want to deal with
