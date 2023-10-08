@@ -18,7 +18,7 @@ public class PowerUpDouble : PowerUpBase
             int currentPoint = player.GetPoints();
             player.UpdatePoints(currentPoint);
             // Increase the size of the player when they get this powerup.
-            Vector3 ScaleChange = new Vector3(0.5f, 0.5f, 0.5f);
+            Vector3 ScaleChange = new Vector3(0.1f, 0.1f, 0.1f);
             player.transform.localScale += ScaleChange;
             Destroy(this.gameObject);
     }

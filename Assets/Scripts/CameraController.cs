@@ -19,7 +19,7 @@ public class CameraController : MonoBehaviour
         // Gradually zoom out the camer as the player gets larger
         if (player.GetPoints() > zoomOut * 10) {
             zoomOut *= 2;
-            offset.y = zoomOut;
+            offset.y += 10;
         }
         transform.position  = player.GetPosition() + offset;
 

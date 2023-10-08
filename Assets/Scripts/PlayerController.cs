@@ -46,10 +46,19 @@ public class PlayerController : MonoBehaviour
         // Rotate
         Vector3 m_EulerAngleV = Vector3.up * Time.fixedDeltaTime * turnSpeed * horizontalInput;
         Quaternion deltaRotation = Quaternion.Euler(m_EulerAngleV * Time.fixedDeltaTime * turnSpeed);
+        Quaternion lastRotation = p_rbody.rotation;
         p_rbody.MoveRotation(p_rbody.rotation * deltaRotation);
         transform.Rotate(Vector3.up * Time.deltaTime * turnSpeed * horizontalInput);
 
         textBox1.text = points.ToString() + factors[factor];
+        for (var i = 0; i < tail.Count ; i++) {
+            PowerUpController tailBit = tail[i].GetComponent<PowerUpController>();
+            Vector3 temp_location = tailBit.getLocation();
+            Quaternion temp_rotation = tailBit.getRotation();
+            tailBit.followLeader(lastPosition, lastRotation);
+            lastPosition = temp_location;
+            lastRotation = temp_rotation;
+        }
     }
 
     // ENCAPSULATION
@@ -122,7 +131,7 @@ public class PlayerController : MonoBehaviour
             PowerUpController tc_1 = tail[i].GetComponent<PowerUpController>();
             PowerUpController tc_2 = tail[i + 1].GetComponent<PowerUpController>();
             if (tc_1.value <= tc_2.value) {
-                tc_1.value += tc_2.value;
+                tc_1.updateValue(tc_1.value + tc_2.value);
                 Destroy(tail[i + 1]);
                 tail.RemoveAt(i + 1);
                 // We removed an element, so go back 1 step.
