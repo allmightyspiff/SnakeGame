@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PowerUpSpawner : MonoBehaviour
 {
-    public GameObject powerPrefab;
+    public List<GameObject> powerPrefab;
     // Time To Double in seconds
     public int ttu = 1;
     private float maxX = 8;
@@ -26,10 +26,14 @@ public class PowerUpSpawner : MonoBehaviour
     void Update()
     {
         timePassed += Time.deltaTime;
+        int powerup = 0;
         if (timePassed > ttu && curPower < maxPower) {
+            if (curPower % 10 == 0) {
+                powerup = 1;
+            }
             timePassed = 0;
             Vector3 position = new Vector3(Random.Range(maxX * -1, maxX), 0.5f, Random.Range(maxZ * -1, maxZ));
-            GameObject newObject = Instantiate(powerPrefab, position, Quaternion.identity, this.transform);
+            GameObject newObject = Instantiate(powerPrefab[powerup], position, Quaternion.identity, this.transform);
             curPower += 1;  
         }
     }

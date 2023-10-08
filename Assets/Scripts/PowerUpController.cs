@@ -1,20 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class PowerUpController : MonoBehaviour
+// INHERITANCE
+public class PowerUpController : PowerUpBase
 {
-    public int value = 2;
-    // Time To Double in seconds
-    public int ttd = 6;
-    private float timePassed = 0.0f;
-    private GameObject leader;
-    public TextMeshPro textBox;
-    // Start is called before the first frame update
+
+    private bool collected = false;
     void Start()
     {
-        
+        value = 2;
+        ttd = 6;
+        timePassed = 0.0f;
     }
 
     // Update is called once per frame
@@ -23,32 +19,52 @@ public class PowerUpController : MonoBehaviour
         if (leader != null) {
             // transform.position = Vector3.MoveTowards(transform.position, leader.transform.position, .03f);
         }
-        
     }
 
-    void LateUpdate()
+    // POLYMORPHISM
+    public override void DoPowerUp(PlayerController player)
     {
-        timePassed += Time.deltaTime;
-        if (leader == null && timePassed > ttd) {
-            timePassed = 0;
-            value *= 2;
-            textBox.text = value.ToString();
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        PlayerController player = other.GetComponent<PlayerController>();
-        PowerUpSpawner spawner = this.GetComponentInParent<PowerUpSpawner>();
-        if (spawner != null && player != null) {
-            spawner.ClaimPowerup();
-            this.transform.SetParent(other.transform);
-            leader = other.gameObject;
+        if (!collected) {
+            leader = player.gameObject;
+            // this.transform.SetParent(player.transform);
+            // Collider col = this.GetComponent<Collider>();
+            // col.isTrigger = false;
             player.AddTail(this.gameObject);
+            collected = true;
         }
-        
-        
 
-        // Destroy(this.gameObject);
+    }
+
+    // POLYMORPHISM
+    // Will double the value of this powerup
+    public override void TTDAction()
+    {            
+        updateValue(value * 2);
+    }
+    
+    public void updateValue(int newValue)
+    {
+        value = newValue;
+        textBox.text = value.ToString();
+    }
+
+    public void followLeader(Vector3 lastPosition, Quaternion lastRotation)
+    {
+        Transform thisTransform = gameObject.transform;
+        lastPosition -= new Vector3(1.1f, 0, 1.1f);
+        // dont know how to make these rotate properly for now.
+        thisTransform.position = Vector3.MoveTowards(thisTransform.position, lastPosition, 10f);
+        // thisTransform.Translate(lastPosition);
+    }
+
+    public Vector3 getLocation()
+    {
+        return gameObject.transform.position;
+    }
+
+    public Quaternion getRotation()
+    {
+        return gameObject.transform.rotation;
     }
 }
+
